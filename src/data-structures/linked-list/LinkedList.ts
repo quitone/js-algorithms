@@ -1,41 +1,29 @@
-import Comparator from "../utils/comparator/comparator"
+import Comparator from "../../utils/comparator/comparator"
 import LinkedListNode from "./LinkedListNode"
 
 
-export default class LinkedList {
-    /**
-     * @var LinkedListNode
-     * @memberof LinkedList
-     */
-    head = null
-    /**
-     * @var LinkedListNode
-     * @memberof LinkedList
-     */
-    tail = null
-    /** @param {Function} compareFunc */
-    constructor(compareFunc) {
-        this.comparator = new Comparator(compareFunc)
+export default class LinkedList<V> {
+    head : LinkedListNode<V> | null = null
+    tail : LinkedListNode<V> | null = null
+    comparator: Comparator<V>
+
+    constructor(compareFunc?: (a: V, b: V) => -1|0|1) {
+        this.comparator = new Comparator<V>(compareFunc)
     }
-    /**
-     * @param {*} value 
-     * @returns {LinkedList}
-     */
-    append(value) {
-        const node = new LinkedListNode(value, null)
+
+    append(value: V) {
+        const node = new LinkedListNode(value)
         if (!this.head) {
             this.head = node
         } else {
+            // @ts-ignore
             this.tail.next = node
         }
         this.tail = node
         return this
     }
-    /**
-     * @param {*} value 
-     * @returns {LinkedList}
-     */
-    prepend(value) {
+
+    prepend(value: V): LinkedList<V> {
         const node = new LinkedListNode(value, this.head)
         if (this.head) {
             this.head = node
@@ -45,11 +33,8 @@ export default class LinkedList {
         }
         return this
     }
-    /**
-     * @param {*} value 
-     * @returns {LinkedListNode}
-     */
-    delete(value) {
+
+    delete(value: V): LinkedListNode<V>|null {
         if (!this.head) {
             return null
         }
@@ -72,24 +57,19 @@ export default class LinkedList {
                 }
             }
         }
+        // @ts-ignore
         if (this.comparator.equal(this.tail.value, value)) {
             this.tail = currNode
         }
         return deletedNode
     }
-    /**
-     * 
-     * @param {object} param0 
-     * @param {*} param0.value
-     * @param {Function} param0.callback
-     * @returns {LinkedListNode}
-     */
-    find({ value, callback }) {
+
+    find({ value, callback }: { value: V, callback ?: (arg0: V) => boolean }): LinkedListNode<V>|null {
         if (!this.head) {
             return null
         }
 
-        let currNode = this.head
+        let currNode: LinkedListNode<V> | null | undefined = this.head
 
         while (currNode) {
             if (callback && callback(currNode.value)) {
@@ -125,7 +105,7 @@ export default class LinkedList {
         }
 
         const deletedTail = this.tail
-        let currNode = this.head
+        let currNode = this.head as LinkedListNode<V>
 
         if (currNode === deletedTail) {
             this.head = null
@@ -142,15 +122,11 @@ export default class LinkedList {
         }
         return deletedTail
     }
-    /**
-     * @param {*[]} array 
-     * @returns {LinkedList}
-     */
-    fromArray(array) {
+    fromArray(array: V[]) {
         array.forEach(item => this.append(item));
         return this
     }
-    toArray() {
+    toArray(): LinkedListNode<V>[] {
         const nodes = []
         let currNode = this.head
         while (currNode) {
@@ -159,7 +135,7 @@ export default class LinkedList {
         }
         return nodes
     }
-    toString(callback) {
+    toString(callback?: (V: any) => string) {
         return this.toArray().map(node => node.toString(callback)).toString()
     }
 
