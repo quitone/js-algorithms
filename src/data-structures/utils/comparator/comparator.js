@@ -2,7 +2,7 @@ export default class Comparator {
     constructor(compareFunc) {
         this.compare = compareFunc ? compareFunc : Comparator.defaultCompareFunc
     }
-    defaultCompareFunc(a, b) {
+    static defaultCompareFunc(a, b) {
         if (a === b) {
             return 0
         }

@@ -77,6 +77,13 @@ export default class LinkedList {
         }
         return deletedNode
     }
+    /**
+     * 
+     * @param {object} param0 
+     * @param {*} param0.value
+     * @param {Function} param0.callback
+     * @returns {LinkedListNode}
+     */
     find({ value, callback }) {
         if (!this.head) {
             return null
@@ -112,7 +119,29 @@ export default class LinkedList {
 
         return deletedHead
     }
-    deleteTail() {}
+    deleteTail() {
+        if (!this.tail) {
+            return null
+        }
+
+        const deletedTail = this.tail
+        let currNode = this.head
+
+        if (currNode === deletedTail) {
+            this.head = null
+            this.tail = null
+        }
+
+        while (currNode.next) {
+            if (currNode.next === deletedTail) {
+                currNode.next = null
+                this.tail = currNode
+                break
+            }
+            currNode = currNode.next
+        }
+        return deletedTail
+    }
     /**
      * @param {*[]} array 
      * @returns {LinkedList}
